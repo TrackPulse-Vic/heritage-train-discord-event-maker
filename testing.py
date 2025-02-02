@@ -1,3 +1,2 @@
+from main import addEventsToServer
 from scraper import steamrail_tours
-
-
