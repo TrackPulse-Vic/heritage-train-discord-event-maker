@@ -10,7 +10,7 @@ def steamrail_tours():
 
     # Set up Firefox options
     firefox_options = Options()
-    # firefox_options.add_argument('--headless')  # Run in headless mode (no GUI)
+    firefox_options.add_argument('--headless')  # Run in headless mode (no GUI)
 
     # Initialize the Firefox driver
     driver = webdriver.Firefox(options=firefox_options)
