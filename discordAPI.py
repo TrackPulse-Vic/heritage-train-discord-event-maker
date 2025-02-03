@@ -13,8 +13,7 @@ discord_events = DiscordEvents(TOKEN)
 async def readEvents(gid):
     # Use the instance (discord_events) instead of the class (DiscordEvents)
     events = await discord_events.list_guild_events(gid)
-    print("Current events:", events)
-    
+    return events    
 async def addEvent(guild_id: str,
         event_name: str,
         event_description: str,
