@@ -60,7 +60,7 @@ async def view_events(interaction: discord.Interaction):
             
             embed.add_field(
                 name=f"{event['name']} - <t:{unix_timestamp}:D>", 
-                value=f"[{event['description']}]({event['entity_metadata']['location']})", 
+                value=f"{event['description']}\n{event['entity_metadata']['location']}", 
                 inline=False
             )
         await interaction.response.send_message(embed=embed)
