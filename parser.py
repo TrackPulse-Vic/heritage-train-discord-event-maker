@@ -79,3 +79,50 @@ def parse_events(events_list):
             })
     
     return parsed_events
+
+def parseSevenOsevenEvents(events):
+    parsed_events = []
+    
+    for event in events:
+        content = event['content']
+        # Extract date using regex for both single and multi-day events, including different months
+        date_match = re.search(r'(\d{1,2})\s+([A-Za-z]+)(?:\s+to\s+(\d{1,2})\s+([A-Za-z]+))?,?\s+(\d{4})', content)
+        if not date_match:
+            continue
+
+        start_day, start_month, end_day, end_month, year = date_match.groups()
+        start_date_str = f"{start_day} {start_month} {year}"
+
+        try:
+            start_date_obj = datetime.datetime.strptime(start_date_str, '%d %B %Y')
+            # Set start time to 10am AEST
+            start_date_obj = start_date_obj.replace(hour=10, minute=0, second=0)
+            formatted_date = start_date_obj.strftime('%Y-%m-%dT%H:%M:%S+10:00')
+            
+            # If end_day exists, use it for end_date, otherwise use start_day
+            if end_day:
+                # Use end_month if provided, otherwise use start_month
+                month_to_use = end_month if end_month else start_month
+                end_date_str = f"{end_day} {month_to_use} {year}"
+                end_date_obj = datetime.datetime.strptime(end_date_str, '%d %B %Y')
+                end_date_obj = end_date_obj.replace(hour=18, minute=0, second=0)
+            else:
+                end_date_obj = start_date_obj.replace(hour=18)
+            
+            formatted_date_later = end_date_obj.strftime('%Y-%m-%dT%H:%M:%S+10:00')
+
+            # Extract name and description (rest of the content)
+            name_match = re.match(r'.*?\d{4}\s*[-–]\s*([^-–]+)', content)
+            
+            parsed_events.append({
+                'date': formatted_date,
+                'end_date': formatted_date_later,
+                'name': event.get('name'),
+                'description': content,
+                'book_link': event.get('book_link')
+            })
+        except ValueError:
+            continue
+
+    return parsed_events
+

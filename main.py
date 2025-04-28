@@ -1,6 +1,7 @@
 import asyncio
 from discordAPI import addEvent
 from eventAPI import DiscordEvents
+from ical import make_icalender
 from parser import parse_events
 from scraper import *
 import re
@@ -39,11 +40,14 @@ async def addEventsToServer():
         print(f"Description: {event['description']}")
         print(f"Book link: {event['book_link']}")
         
+    print('We are now making calender files for each event.')
+    for event in parsed_data:
+        make_icalender(event['date'], event['end_date'], event['name'], event['description'], event['book_link'])
+        
 
     print("We are now adding the events to the Discord server.")
 
 
-    # File to store added events
     EVENTS_FILE = f'servers/{SERVER}.csv'
 
     # Create the CSV file if it doesn't exist
@@ -66,6 +70,7 @@ async def addEventsToServer():
             continue
 
         # Add the event to the Discord server
+        newEvents = []
         if event['book_link'] != None:
             try:
                 await addEvent(SERVER, event['name'], event['description'], event['date'], event["end_date"], {'location': event['book_link']})
@@ -73,6 +78,8 @@ async def addEventsToServer():
                     writer = csv.writer(f)
                     writer.writerow([event['name']])
                     print(f"Successfully added event: {event['name']}")
+                newEvents.append(event['name'], event['book_link'])
+                
             except Exception as e:
                 print(f"Error adding event: {e}")
         else:
@@ -80,4 +87,4 @@ async def addEventsToServer():
         
         time.sleep(2)  # Add a delay to avoid rate limiting
         
-        # break  # Remove this line to add all events
+    return newEvents

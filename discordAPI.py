@@ -11,7 +11,6 @@ if not TOKEN:
 discord_events = DiscordEvents(TOKEN)
 
 async def readEvents(gid):
-    # Use the instance (discord_events) instead of the class (DiscordEvents)
     events = await discord_events.list_guild_events(gid)
     return events    
 async def addEvent(guild_id: str,
