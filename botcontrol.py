@@ -29,8 +29,9 @@ async def on_ready():
 @tasks.loop(hours=24)
 async def task_loop():
     await bot.get_channel(LOG_CHANNEL).send("Refreshing steamrail events...")
-    await addEventsToServer()
+    newEvents = await addEventsToServer()
     await bot.get_channel(LOG_CHANNEL).send("Events steamrail refreshed!")
+    await bot.get_channel(LOG_CHANNEL).send(f"New events added: {newEvents}")
 
     
 @bot.tree.command(name="refresh", description="Manually refresh the steamrail events")
@@ -44,6 +45,7 @@ async def refresh(interaction: discord.Interaction):
             await interaction.edit_original_response(content=f"Error: {e}")
     else:
         await interaction.response.send_message("You don't have permission to do that!")
+
 
 @bot.tree.command(name='view-events', description='View the upcoming steamrail events')
 async def view_events(interaction: discord.Interaction):
@@ -107,5 +109,4 @@ async def sync(ctx: commands.Context, guilds: commands.Greedy[discord.Object], s
         await ctx.send(f"Synced the tree to {ret}/{len(guilds)}.")
     
 
-# Replace 'YOUR_TOKEN' with your bot's token
 bot.run(TOKEN)

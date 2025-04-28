@@ -21,5 +21,9 @@ async def addEvent(guild_id: str,
         event_metadata: dict,
         event_privacy_level=2,
         channel_id=None):
-    await discord_events.create_guild_event(guild_id, event_name, event_description, event_start_time, event_end_time, event_metadata, event_privacy_level, channel_id)
-   
+    try:
+        await discord_events.create_guild_event(guild_id, event_name, event_description, event_start_time, event_end_time, event_metadata, event_privacy_level, channel_id)
+    except Exception as e:
+        print(f"Error adding event: {e}")
+        return False
+    return True

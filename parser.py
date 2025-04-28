@@ -85,7 +85,7 @@ def parseSevenOsevenEvents(events):
     
     for event in events:
         content = event['content']
-        # Extract date using regex for both single and multi-day events, including different months
+        # Extract date using regex for different formats
         date_match = re.search(r'(\d{1,2})\s+([A-Za-z]+)(?:\s+to\s+(\d{1,2})\s+([A-Za-z]+))?,?\s+(\d{4})', content)
         if not date_match:
             continue
