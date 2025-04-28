@@ -1,7 +1,6 @@
 import asyncio
 import uuid
 
-from TinyURL.tinyurl import shortenURL
 from discordAPI import addEvent
 from eventAPI import DiscordEvents
 from ical import make_icalender
